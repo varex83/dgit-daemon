@@ -1,0 +1,17 @@
+[package]
+name = "daemon"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio.workspace = true
+hyper.workspace = true
+tracing.workspace = true
+axum.workspace = true
+onchain.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+dotenv.workspace = true
+tracing-subscriber.workspace = true
+tempfile.workspace = true
+walkdir.workspace = true

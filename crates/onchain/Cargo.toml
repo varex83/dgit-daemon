@@ -1,0 +1,16 @@
+[package]
+name = "onchain"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+anyhow.workspace = true
+tokio.workspace = true
+dotenv.workspace = true
+ethcontract.workspace = true
+walkdir.workspace = true
+reqwest = { workspace = true, features = ["multipart", "json"] }
+tracing.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true

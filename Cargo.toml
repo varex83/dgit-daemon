@@ -1,0 +1,26 @@
+[workspace]
+members = [
+    "crates/onchain",
+    "crates/daemon",
+    "crates/cli",
+]
+
+# Workspace-wide dependencies can be specified here
+[workspace.dependencies]
+tokio = { version = "1.36", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+hyper = { version = "1.1", features = ["full"] }
+dotenv = "0.15.0"
+ethcontract = "0.25.7"
+walkdir = "2.5.0"
+reqwest = "0.12.4"
+axum = "0.8.4"
+onchain = { path = "crates/onchain" }
+daemon = { path = "crates/daemon" }
+cli = { path = "crates/cli" }
+tempfile = "3.1.0"

@@ -5,7 +5,6 @@ edition = "2024"
 
 [dependencies]
 tokio.workspace = true
-hyper.workspace = true
 tracing.workspace = true
 axum.workspace = true
 onchain.workspace = true

@@ -33,7 +33,13 @@ async fn main() -> Result<()> {
         .route("/health", get(health_check))
         .with_state(contract_state);
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    // Read port from environment variable or use default
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "3000".to_string())
+        .parse::<u16>()
+        .unwrap_or(3000);
+
+    let addr = SocketAddr::from(([127, 0, 0, 1], port));
     info!("Server listening on {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;

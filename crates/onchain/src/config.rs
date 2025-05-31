@@ -3,45 +3,6 @@ use tracing::{debug, warn};
 pub struct Config;
 
 impl Config {
-    pub fn get_pinata_secret_api_key() -> String {
-        match dotenv::var("PINATA_SECRET_API_KEY") {
-            Ok(key) => {
-                debug!("Loaded Pinata secret API key, length: {}", key.len());
-                key
-            },
-            Err(_) => {
-                warn!("PINATA_SECRET_API_KEY environment variable not found, using empty string");
-                "".to_string()
-            }
-        }
-    }
-
-    pub fn get_pinata_api_key() -> String {
-        match dotenv::var("PINATA_API_KEY") {
-            Ok(key) => {
-                debug!("Loaded Pinata API key, length: {}", key.len());
-                key
-            },
-            Err(_) => {
-                warn!("PINATA_API_KEY environment variable not found, using empty string");
-                "".to_string()
-            }
-        }
-    }
-
-    pub fn get_pinata_jwt() -> String {
-        match dotenv::var("PINATA_JWT") {
-            Ok(jwt) => {
-                debug!("Loaded Pinata JWT, length: {}", jwt.len());
-                jwt
-            },
-            Err(_) => {
-                warn!("PINATA_JWT environment variable not found, using empty string");
-                "".to_string()
-            }
-        }
-    }
-
     pub fn pk() -> String {
         match dotenv::var("PK") {
             Ok(key) => {

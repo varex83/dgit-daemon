@@ -526,4 +526,122 @@ impl ContractInteraction {
                 }
             }
     }
+
+    #[instrument(skip(self), err)]
+    pub async fn grant_pusher_role(&self, address: Address) -> Result<()> {
+        info!("Granting pusher role to address: {}", address);
+
+        match self.contract
+            .grant_pusher_role(address)
+            .send()
+            .await {
+                Ok(tx) => {
+                    info!("Pusher role granted successfully, tx hash: {:?}", tx.hash());
+                    debug!("Transaction details: {:?}", tx);
+                    Ok(())
+                },
+                Err(e) => {
+                    error!("Failed to grant pusher role to address {}: {}", address, e);
+                    Err(anyhow::Error::from(e))
+                }
+            }
+    }
+
+    #[instrument(skip(self), err)]
+    pub async fn revoke_pusher_role(&self, address: Address) -> Result<()> {
+        info!("Revoking pusher role from address: {}", address);
+
+        match self.contract
+            .revoke_pusher_role(address)
+            .send()
+            .await {
+                Ok(tx) => {
+                    info!("Pusher role revoked successfully, tx hash: {:?}", tx.hash());
+                    debug!("Transaction details: {:?}", tx);
+                    Ok(())
+                },
+                Err(e) => {
+                    error!("Failed to revoke pusher role from address {}: {}", address, e);
+                    Err(anyhow::Error::from(e))
+                }
+            }
+    }
+
+    #[instrument(skip(self), err)]
+    pub async fn grant_admin_role(&self, address: Address) -> Result<()> {
+        info!("Granting admin role to address: {}", address);
+
+        match self.contract
+            .grant_admin_role(address)
+            .send()
+            .await {
+                Ok(tx) => {
+                    info!("Admin role granted successfully, tx hash: {:?}", tx.hash());
+                    debug!("Transaction details: {:?}", tx);
+                    Ok(())
+                },
+                Err(e) => {
+                    error!("Failed to grant admin role to address {}: {}", address, e);
+                    Err(anyhow::Error::from(e))
+                }
+            }
+    }
+
+    #[instrument(skip(self), err)]
+    pub async fn revoke_admin_role(&self, address: Address) -> Result<()> {
+        info!("Revoking admin role from address: {}", address);
+
+        match self.contract
+            .revoke_admin_role(address)
+            .send()
+            .await {
+                Ok(tx) => {
+                    info!("Admin role revoked successfully, tx hash: {:?}", tx.hash());
+                    debug!("Transaction details: {:?}", tx);
+                    Ok(())
+                },
+                Err(e) => {
+                    error!("Failed to revoke admin role from address {}: {}", address, e);
+                    Err(anyhow::Error::from(e))
+                }
+            }
+    }
+
+    #[instrument(skip(self), err)]
+    pub async fn has_pusher_role(&self, address: Address) -> Result<bool> {
+        debug!("Checking if address {} has pusher role", address);
+
+        match self.contract
+            .has_pusher_role(address)
+            .call()
+            .await {
+                Ok(has_role) => {
+                    info!("Address {} has pusher role: {}", address, has_role);
+                    Ok(has_role)
+                },
+                Err(e) => {
+                    error!("Failed to check if address {} has pusher role: {}", address, e);
+                    Err(anyhow::Error::from(e))
+                }
+            }
+    }
+
+    #[instrument(skip(self), err)]
+    pub async fn has_admin_role(&self, address: Address) -> Result<bool> {
+        debug!("Checking if address {} has admin role", address);
+
+        match self.contract
+            .has_admin_role(address)
+            .call()
+            .await {
+                Ok(has_role) => {
+                    info!("Address {} has admin role: {}", address, has_role);
+                    Ok(has_role)
+                },
+                Err(e) => {
+                    error!("Failed to check if address {} has admin role: {}", address, e);
+                    Err(anyhow::Error::from(e))
+                }
+            }
+    }
 }

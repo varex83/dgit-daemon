@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-contract RepositoryContract {
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract RepositoryContract is AccessControl {
+
+        bytes32 public constant PUSHER_ROLE = keccak256("PUSHER_ROLE");
+
+
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(PUSHER_ROLE, msg.sender);
+    }
+
     struct Object {
         string hash;
         bytes ipfs_url;
@@ -28,7 +39,17 @@ contract RepositoryContract {
     event RefAdded(string ref, bytes ipfs_url, address pusher);
     event ConfigUpdated(bytes config);
 
-    function saveObject(string memory _hash, bytes memory _ipfs_url) public {
+    modifier onlyPusher() {
+        require(hasRole(PUSHER_ROLE, msg.sender), "Caller is not a pusher");
+        _;
+    }
+
+    modifier onlyAdmin() {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not an admin");
+        _;
+    }
+
+    function saveObject(string memory _hash, bytes memory _ipfs_url) public onlyPusher {
         if (objects[_hash].ipfs_url.length > 0) {
             return;
         }
@@ -39,7 +60,7 @@ contract RepositoryContract {
         emit ObjectSaved(_hash, _ipfs_url, msg.sender);
     }
 
-    function addRef(string memory _ref, bytes memory _data) public {
+    function addRef(string memory _ref, bytes memory _data) public onlyPusher {
         address pusher = msg.sender;
         Ref memory newRef = Ref(_ref, _data, true, pusher);
 
@@ -55,9 +76,33 @@ contract RepositoryContract {
         emit RefAdded(_ref, _data, pusher);
     }
 
-    function updateConfig(bytes memory _config) public {
+    function updateConfig(bytes memory _config) public onlyPusher {
         config = _config;
         emit ConfigUpdated(_config);
+    }
+
+    function grantPusherRole(address _address) public onlyAdmin {
+        _grantRole(PUSHER_ROLE, _address);
+    }
+
+    function revokePusherRole(address _address) public onlyAdmin {
+        _revokeRole(PUSHER_ROLE, _address);
+    }
+
+    function hasPusherRole(address _address) public view returns (bool) {
+        return hasRole(PUSHER_ROLE, _address);
+    }
+
+    function grantAdminRole(address _address) public onlyAdmin {
+        _grantRole(DEFAULT_ADMIN_ROLE, _address);
+    }
+
+    function revokeAdminRole(address _address) public onlyAdmin {
+        _revokeRole(DEFAULT_ADMIN_ROLE, _address);
+    }
+
+    function hasAdminRole(address _address) public view returns (bool) {
+        return hasRole(DEFAULT_ADMIN_ROLE, _address);
     }
 
     function getConfig() public view returns (bytes memory) {
@@ -84,7 +129,7 @@ contract RepositoryContract {
         return results;
     }
 
-    function addObjects(string[] memory _hashes, bytes[] memory _ipfs_urls) public {
+    function addObjects(string[] memory _hashes, bytes[] memory _ipfs_urls) public onlyPusher {
         for (uint256 i = 0; i < _hashes.length; i++) {
             if (objects[_hashes[i]].ipfs_url.length > 0) {
                 continue;
@@ -96,7 +141,7 @@ contract RepositoryContract {
         }
     }
 
-    function addRefs(string[] memory _refsArr, bytes[] memory _dataArr) public {
+    function addRefs(string[] memory _refsArr, bytes[] memory _dataArr) public onlyPusher {
         require(_refsArr.length == _dataArr.length, "Mismatched refs and data arrays");
         address pusher = msg.sender;
         for (uint256 i = 0; i < _refsArr.length; i++) {
